@@ -13,32 +13,7 @@ public final class DatabaseWrapper {
     private static final String USER = "tester";
     private static final String PASSWORD = "javapsql";
 
-
-    private DatabaseWrapper() {
-
-    }
-
-    public static void main(String[] args) {
-        //DatabaseWrapper db = new DatabaseWrapper();
-        selectAllUsers();
-    }
-
-    public static void rawQuery(String query) {
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try {
-            conn = connect();
-            stmt = conn.createStatement();
-            stmt.executeUpdate(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try { if (rs != null)     rs.close(); } catch (Exception e) { e.printStackTrace();}
-            try { if (stmt != null) stmt.close(); } catch (Exception e) { e.printStackTrace();}
-            try { if (conn != null) conn.close(); } catch (Exception e) { e.printStackTrace();}
-        }
-    }
+    private DatabaseWrapper() {}
 
       ////////////////////////
      /* PREDEFINED QUERIES */
@@ -130,7 +105,8 @@ public final class DatabaseWrapper {
         return userId;
     }
 
-    // Returns the id (first column value) of an Insert Query
+    // On success:
+    //  Returns the id (first column value) of an Insert Query
     private static long getInsertId(ResultSet resultSet) throws SQLException {
         if (resultSet.next()) {
             return resultSet.getLong(1);
@@ -139,7 +115,7 @@ public final class DatabaseWrapper {
     }
 
       /////////////////////
-     /* PRIVATE METHODS */
+     /* TABLE CREATION  */
     /////////////////////
 
     // Create the tables necessary
@@ -213,6 +189,8 @@ public final class DatabaseWrapper {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////
+
     public static void resetDatabase() {
         dropTables();
         createTables();
@@ -221,10 +199,5 @@ public final class DatabaseWrapper {
     // Return an open connection to the DB
     private static Connection connect() throws SQLException {
         return DriverManager.getConnection(DB_URL, USER, PASSWORD);
-    }
-
-    // Close the connection to the DB
-    private static void disconnect(Connection conn) throws SQLException {
-        conn.close();
     }
 }
