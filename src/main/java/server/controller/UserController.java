@@ -1,11 +1,9 @@
 package server.controller;
 
-import org.json.JSONObject;
 import server.database.DatabaseWrapper;
 import server.model.User;
 
 import java.sql.Date;
-import java.util.Iterator;
 import java.util.List;
 
 public class UserController {
@@ -19,9 +17,6 @@ public class UserController {
     }
 
     public String getAllUsers() {
-        JSONObject json = new JSONObject();
-        List<User> users = DatabaseWrapper.selectAllUsers();
-
-        return "";
+        return User.getAllUsersJSON();
     }
 }

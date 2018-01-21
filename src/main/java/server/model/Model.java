@@ -12,5 +12,4 @@ abstract public class Model {
     abstract Model selectById(long id);
     abstract Model insert();
 
-
 }

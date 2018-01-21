@@ -58,7 +58,6 @@ public final class DatabaseWrapper {
                         rs.getDate(4),
                         rs.getDate(5)
                 ));
-                System.out.println(users.get(users.size()-1));
             }
 
 

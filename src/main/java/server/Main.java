@@ -14,6 +14,10 @@ public class Main {
         StopController stopController = new StopController();
         TransactionController transactionController = new TransactionController();
 
+        get("/api/users",  (request, response) -> {
+            return userController.getAllUsers();
+        });
+
         post( "/api/users", "application/json", (request, response) -> {
             JSONObject json = new JSONObject(request.body());
             String name         = json.getString("name");
