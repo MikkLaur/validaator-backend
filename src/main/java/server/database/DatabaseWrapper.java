@@ -19,6 +19,7 @@ public final class DatabaseWrapper {
      /* PREDEFINED QUERIES */
     ////////////////////////
 
+    // *** PS: storing every User in a List will incur scaling issues
     public static List<User> selectAllUsers() {
         List<User> users = new ArrayList<>();
         try {
