@@ -34,7 +34,7 @@ public final class DatabaseWrapper {
                         rs.getDate(5)
                 ));
             }
-
+            conn.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
