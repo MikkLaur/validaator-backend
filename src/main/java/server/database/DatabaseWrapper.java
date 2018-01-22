@@ -2,6 +2,7 @@ package server.database;
 
 import server.model.Stop;
 import server.model.User;
+import server.model.UserTransactionHistory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,6 +20,33 @@ public final class DatabaseWrapper {
       ////////////////////////
      /* PREDEFINED QUERIES */
     ////////////////////////
+
+    public static List<UserTransactionHistory> selectUserTransactionHistory(long userId) {
+        List<UserTransactionHistory> transactions = new ArrayList<>();
+        try {
+            Connection conn = connect();
+            PreparedStatement pstmt = conn
+                    .prepareStatement
+                            ("SELECT transactions.ticket_nr, stops.name, transactions.date_added FROM transactions " +
+                             "INNER JOIN stops ON transactions.stop_id = stops.id " +
+                             "INNER JOIN users ON transactions.user_id = users.id " +
+                             "WHERE users.id = (?) " +
+                             "ORDER BY transactions.date_added DESC");
+            pstmt.setLong(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                transactions.add(new UserTransactionHistory(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getDate(3)
+                ));
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactions;
+    }
 
     // *** PS: storing every User in a List will incur scaling issues
     public static List<Stop> selectAllStops() {
