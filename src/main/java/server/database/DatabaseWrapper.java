@@ -1,5 +1,6 @@
 package server.database;
 
+import server.model.Stop;
 import server.model.User;
 
 import java.sql.*;
@@ -18,6 +19,28 @@ public final class DatabaseWrapper {
       ////////////////////////
      /* PREDEFINED QUERIES */
     ////////////////////////
+
+    // *** PS: storing every User in a List will incur scaling issues
+    public static List<Stop> selectAllStops() {
+        List<Stop> stops = new ArrayList<>();
+        try {
+            Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM stops;");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                stops.add(new Stop(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getDate(3)
+                ));
+            }
+            conn.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stops;
+    }
 
     // *** PS: storing every User in a List will incur scaling issues
     public static List<User> selectAllUsers() {
@@ -134,14 +157,15 @@ public final class DatabaseWrapper {
                     ");";
 
             query += "CREATE TABLE stops (" +
-                    "id     SERIAL  PRIMARY KEY," +
-                    "name   TEXT    NOT NULL" +
+                    "id         SERIAL      PRIMARY KEY," +
+                    "name       TEXT        NOT NULL," +
+                    "date_added TIMESTAMP   DEFAULT CURRENT_TIMESTAMP" +
                     ");";
 
             query += "CREATE TABLE transactions (" +
-                    "ticket_nr      SERIAL PRIMARY KEY," +
-                    "user_id        SERIAL REFERENCES users (id)," +
-                    "stop_id        SERIAL REFERENCES stops (id)," +
+                    "ticket_nr      SERIAL    PRIMARY KEY," +
+                    "user_id        SERIAL    REFERENCES users (id)," +
+                    "stop_id        SERIAL    REFERENCES stops (id)," +
                     "date_added     TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                     ");";
 
