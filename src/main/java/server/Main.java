@@ -27,6 +27,10 @@ public class Main {
             return userController.registerUser(name, personalID, dateOfBirth);
         });
 
+        get("/api/stops",  (request, response) -> {
+            return stopController.getAllStops();
+        });
+
         post( "/api/stops", "application/json",(request, response) -> {
             JSONObject json = new JSONObject(request.body());
             String name = json.getString("name");
