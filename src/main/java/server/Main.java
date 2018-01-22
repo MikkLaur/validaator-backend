@@ -43,7 +43,7 @@ public class Main {
             String userId = json.getString("user_id");
             String stopId = json.getString("stop_id");
 
-            return "ticket_nr";
+            return transactionController.buyTicket(userId, stopId);
         });
     }
 }
