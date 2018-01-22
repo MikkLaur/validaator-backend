@@ -33,7 +33,7 @@ public class User {
                         .put("name", this.getName())
                         .put("personal_id", this.getPersonalId())
                         .put("date_of_birth", this.getDateOfBirth())
-                        .put("dateAdded", this.getDateAdded()));
+                        .put("date_added", this.getDateAdded()));
     }
 
     public static String getAllUsersJSON() {
