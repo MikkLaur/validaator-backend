@@ -13,6 +13,6 @@ public class StopController {
     }
 
     public String getAllStops() {
-        return Stop.getAllStopsJSON();
+        return Stop.getAllJSON();
     }
 }

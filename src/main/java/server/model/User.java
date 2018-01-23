@@ -36,7 +36,7 @@ public class User {
                         .put("date_added", this.getDateAdded()));
     }
 
-    public static String getAllUsersJSON() {
+    public static String getAllJSON() {
         JSONArray jsonArray = new JSONArray();
         List<User> users = DatabaseWrapper.selectAllUsers();
         for (User user : users) {

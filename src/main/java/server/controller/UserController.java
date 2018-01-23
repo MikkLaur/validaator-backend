@@ -4,7 +4,6 @@ import server.database.DatabaseWrapper;
 import server.model.User;
 
 import java.sql.Date;
-import java.util.List;
 
 public class UserController {
     public UserController() {
@@ -17,6 +16,6 @@ public class UserController {
     }
 
     public String getAllUsers() {
-        return User.getAllUsersJSON();
+        return User.getAllJSON();
     }
 }

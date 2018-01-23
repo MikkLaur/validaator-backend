@@ -30,7 +30,7 @@ public class Stop {
                         .put("date_added", this.getDateAdded()));
     }
 
-    public static String getAllStopsJSON() {
+    public static String getAllJSON() {
         JSONArray jsonArray = new JSONArray();
         List<Stop> stops = DatabaseWrapper.selectAllStops();
         for (Stop stop : stops) {
