@@ -1,6 +1,5 @@
 package server;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import server.controller.StopController;
 import server.controller.TransactionController;
@@ -65,7 +64,7 @@ public class Main {
              *      ...
              *    ]
              */
-            return stopController.getAllStops();
+            return stopController.getAllJSON();
         });
 
         post( "/api/stops", "application/json",(request, response) -> {
@@ -125,7 +124,7 @@ public class Main {
              *        - user with :id does not exist
              */
             String userId = request.params(":id");
-            return transactionController.getTransactionHistory(userId);
+            return transactionController.getAllUserJSON(userId);
         });
 
     }

@@ -1,11 +1,7 @@
 package server.model;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-import server.database.DatabaseWrapper;
-
 import java.sql.Date;
-import java.util.List;
 
 public class User {
     private long id;
@@ -34,15 +30,6 @@ public class User {
                         .put("personal_id", this.getPersonalId())
                         .put("date_of_birth", this.getDateOfBirth())
                         .put("date_added", this.getDateAdded()));
-    }
-
-    public static String getAllJSON() {
-        JSONArray jsonArray = new JSONArray();
-        List<User> users = DatabaseWrapper.selectAllUsers();
-        for (User user : users) {
-            jsonArray.put(user.toJSONObject());
-        }
-        return jsonArray.toString();
     }
 
     public long getId() {

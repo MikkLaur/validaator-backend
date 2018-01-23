@@ -1,16 +1,12 @@
 package server.model;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-import server.database.DatabaseWrapper;
-
 import java.sql.Date;
-import java.util.List;
 
 public class UserTransactionHistory {
-    long ticketNr;
-    String stopName;
-    Date transactionDate;
+    private long ticketNr;
+    private String stopName;
+    private Date transactionDate;
 
     public UserTransactionHistory(long ticketNr, String stopName, Date transactionDate) {
         this.ticketNr = ticketNr;
@@ -28,15 +24,6 @@ public class UserTransactionHistory {
                 .put(Long.toString(this.getTicketNr()), new JSONObject()
                     .put("stop_name", this.getStopName())
                     .put("date_added", this.getTransactionDate()));
-    }
-
-    public static String getAllJSON(long userId) {
-        JSONArray jsonArray = new JSONArray();
-        List<UserTransactionHistory> historyList = DatabaseWrapper.selectUserTransactionHistory(userId);
-        for (UserTransactionHistory uth : historyList) {
-            jsonArray.put(uth.toJSONObject());
-        }
-        return jsonArray.toString();
     }
 
     public long getTicketNr() {

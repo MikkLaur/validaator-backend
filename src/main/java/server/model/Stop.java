@@ -1,7 +1,6 @@
 package server.model;
 
 import org.json.JSONObject;
-
 import java.sql.Date;
 
 public class Stop {
