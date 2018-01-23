@@ -1,18 +1,26 @@
 package server.controller;
 
+import org.json.JSONArray;
 import server.database.DatabaseWrapper;
 import server.model.Stop;
 
-public class StopController {
+import java.util.List;
+
+public class StopController extends Controller {
     public StopController() {
 
     }
 
     public long registerStop(String name) {
-        return DatabaseWrapper.insertStop(name);
+        return database.insertStop(name);
     }
 
-    public String getAllStops() {
-        return Stop.getAllJSON();
+    public String getAllJSON() {
+        JSONArray jsonArray = new JSONArray();
+        List<Stop> stops = database.selectAllStops();
+        for (Stop stop : stops) {
+            jsonArray.put(stop.toJSONObject());
+        }
+        return jsonArray.toString();
     }
 }
