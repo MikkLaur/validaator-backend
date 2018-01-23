@@ -1,7 +1,6 @@
 package server.controller;
 
 import org.json.JSONArray;
-import server.database.DatabaseWrapper;
 import server.model.Stop;
 
 import java.util.List;

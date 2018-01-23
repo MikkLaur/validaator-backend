@@ -15,12 +15,14 @@ public final class DatabaseWrapper {
     private String USER;
     private String PASSWORD;
 
+    // Used when a Controller is constructed
     public DatabaseWrapper() {
         this.DB_URL   = "jdbc:postgresql://localhost:5432/testdb";
         this.USER     = "tester";
         this.PASSWORD = "javapsql";
     }
 
+    // Used for testing
     public DatabaseWrapper(String databaseUrl, String user, String password) {
         this.DB_URL   = "jdbc:postgresql://".concat(databaseUrl);
         this.USER     = user;
