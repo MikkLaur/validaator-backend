@@ -10,18 +10,28 @@ import java.util.List;
 
 public final class DatabaseWrapper {
     //private static final String JDBC_DRIVER = "org.postgresql.Driver";
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/testdb";
+    private String DB_URL;
 
-    private static final String USER = "tester";
-    private static final String PASSWORD = "javapsql";
+    private String USER;
+    private String PASSWORD;
 
-    private DatabaseWrapper() {}
+    public DatabaseWrapper() {
+        this.DB_URL   = "jdbc:postgresql://localhost:5432/testdb";
+        this.USER     = "tester";
+        this.PASSWORD = "javapsql";
+    }
+
+    public DatabaseWrapper(String databaseUrl, String user, String password) {
+        this.DB_URL   = "jdbc:postgresql://".concat(databaseUrl);
+        this.USER     = user;
+        this.PASSWORD = password;
+    }
 
       ////////////////////////
      /* PREDEFINED QUERIES */
     ////////////////////////
 
-    public static List<UserTransactionHistory> selectUserTransactionHistory(long userId) {
+    public List<UserTransactionHistory> selectUserTransactionHistory(long userId) {
         List<UserTransactionHistory> transactions = new ArrayList<>();
         try {
             Connection conn = connect();
@@ -49,7 +59,7 @@ public final class DatabaseWrapper {
     }
 
     // *** PS: storing every User in a List will incur scaling issues
-    public static List<Stop> selectAllStops() {
+    public List<Stop> selectAllStops() {
         List<Stop> stops = new ArrayList<>();
         try {
             Connection conn = connect();
@@ -71,7 +81,7 @@ public final class DatabaseWrapper {
     }
 
     // *** PS: storing every User in a List will incur scaling issues
-    public static List<User> selectAllUsers() {
+    public List<User> selectAllUsers() {
         List<User> users = new ArrayList<>();
         try {
             Connection conn = connect();
@@ -94,7 +104,7 @@ public final class DatabaseWrapper {
         return users;
     }
 
-    public static long insertStop(String stopName) {
+    public long insertStop(String stopName) {
         long stopId = -1;
         try {
             Connection conn = connect();
@@ -114,7 +124,7 @@ public final class DatabaseWrapper {
         return stopId;
     }
 
-    public static long insertTransaction(long userId, int stopId) {
+    public long insertTransaction(long userId, int stopId) {
         long ticketNr = -1;
         try {
             Connection conn = connect();
@@ -135,7 +145,7 @@ public final class DatabaseWrapper {
         return ticketNr;
     }
 
-    public static long insertUser(String name, String personalId, Date dob) {
+    public long insertUser(String name, String personalId, Date dob) {
         long userId = -1;
         try {
             Connection conn = connect();
@@ -159,7 +169,7 @@ public final class DatabaseWrapper {
 
     // On success:
     //  Returns the id (first column value) of an Insert Query
-    private static long getInsertId(ResultSet resultSet) throws SQLException {
+    private long getInsertId(ResultSet resultSet) throws SQLException {
         if (resultSet.next()) {
             return resultSet.getLong(1);
         }
@@ -171,7 +181,7 @@ public final class DatabaseWrapper {
     /////////////////////
 
     // Create the tables necessary
-    public static void createTables() {
+    public void createTables() {
         try {
             Connection conn = connect();
             Statement stmt = conn.createStatement();
@@ -206,7 +216,7 @@ public final class DatabaseWrapper {
         }
     }
 
-    public static void clearTables() {
+    public void clearTables() {
         try {
             Connection conn = connect();
             Statement stmt = conn.createStatement();
@@ -224,7 +234,7 @@ public final class DatabaseWrapper {
         }
     }
 
-    public static void dropTables() {
+    public void dropTables() {
         try {
             Connection conn = connect();
             Statement stmt = conn.createStatement();
@@ -244,13 +254,13 @@ public final class DatabaseWrapper {
 
     ////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void resetDatabase() {
+    public void resetDatabase() {
         dropTables();
         createTables();
     }
 
     // Return an open connection to the DB
-    private static Connection connect() throws SQLException {
+    private Connection connect() throws SQLException {
         return DriverManager.getConnection(DB_URL, USER, PASSWORD);
     }
 }
