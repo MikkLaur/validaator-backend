@@ -1,6 +1,7 @@
 package server.controller;
 
 import server.database.DatabaseWrapper;
+import server.model.UserTransactionHistory;
 
 public class TransactionController {
     public TransactionController() {
@@ -8,8 +9,12 @@ public class TransactionController {
     }
 
     public long buyTicket(String userId, String stopId) {
-        long userId_L = Long.parseLong(userId);
-        int stopId_Int = Integer.parseInt(stopId);
-        return DatabaseWrapper.insertTransaction(userId_L, stopId_Int);
+        return DatabaseWrapper.insertTransaction(Long.parseLong(userId), Integer.parseInt(stopId));
+    }
+
+
+    /* Gets fully detailed user transaction history in JSON */
+    public String getTransactionHistory(String userId) {
+        return UserTransactionHistory.getAllJSON(Long.parseLong(userId));
     }
 }

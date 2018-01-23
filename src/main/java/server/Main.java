@@ -45,5 +45,11 @@ public class Main {
 
             return transactionController.buyTicket(userId, stopId);
         });
+
+        get( "/api/user/:id/tickethistory", (request, response) -> {
+            String userId = request.params(":id");
+            return transactionController.getTransactionHistory(userId);
+        });
+
     }
 }
