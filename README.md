@@ -41,10 +41,10 @@ Once the application is running, the RESTful routes are open for HTTP requests o
 
     Returns all users in a JSONArray format.
         [ "$id": {
-            "name":          "#getName()".
-            "personal_id":   "#getPersonalId()",
-            "date_of_birth": "#getDateOfBirth()",
-            "date_added":    "#getDateAdded()"
+            "name":          "$name".
+            "personal_id":   "$personal_id",
+            "date_of_birth": "$dateOfBirth",
+            "date_added":    "$dateAdded"
              },
             ...
         ]
