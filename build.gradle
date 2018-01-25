@@ -1,6 +1,8 @@
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'application'
+mainClassName = "server.Main"
 
 sourceCompatibility = 1.9
 
@@ -11,6 +13,7 @@ repositories {
 dependencies {
     compile 'org.json:json:20171018'
     compile 'com.sparkjava:spark-core:2.7.1'
+    compile 'org.slf4j:slf4j-simple:1.7.25'
     compile 'org.postgresql:postgresql:42.2.0'
     testCompile 'junit:junit:4.12'
 }
@@ -27,7 +30,7 @@ buildscript {
 
 /* Credentials for gradle to log into the database. Must match the ones in DatabaseWrapper.java */
 def driver      = 'org.postgresql.Driver'
-def dburl       = "jdbc:postgresql://localhost:5432/validaatordb2"
+def dburl       = "jdbc:postgresql://localhost:5432/validaatordb"
 def dbuser      = 'testuser'
 def dbpassword  = 'test'
 
