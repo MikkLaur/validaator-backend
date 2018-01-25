@@ -10,7 +10,155 @@ repositories {
 
 dependencies {
     compile 'org.json:json:20171018'
-    compile 'com.sparkjava:spark-core:2.3'
-    compile "org.postgresql:postgresql:42.1.4"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'com.sparkjava:spark-core:2.7.1'
+    compile 'org.postgresql:postgresql:42.2.0'
+    testCompile 'junit:junit:4.12'
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.postgresql:postgresql:42.2.0'
+    }
+}
+
+
+/* Credentials for gradle to log into the database. Must match the ones in DatabaseWrapper.java */
+def driver      = 'org.postgresql.Driver'
+def dburl       = "jdbc:postgresql://localhost:5432/validaatordb2"
+def dbuser      = 'testuser'
+def dbpassword  = 'test'
+
+import groovy.sql.Sql
+task createTables (group: 'Database Setup', description: 'Creates tables users, stops and transactions') {
+    configurations { jdbc }
+    dependencies { jdbc 'org.postgresql:postgresql:42.2.0' }
+
+    doFirst {
+        /* Find the PSQL Driver */
+        def sqlClassLoader = Sql.classLoader
+        configurations.jdbc.each { sqlClassLoader.addURL it.toURI().toURL() }
+
+        println "Creating tables..."
+    }
+    doLast {
+        def query = "CREATE TABLE users (" +
+                "id            SERIAL    PRIMARY KEY," +
+                "name          TEXT      NOT NULL," +
+                "personal_id   TEXT      NOT NULL UNIQUE," +
+                "date_of_birth DATE      NOT NULL," +
+                "date_added    TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                ");"
+
+        query += "CREATE TABLE stops (" +
+                "id         SERIAL      PRIMARY KEY," +
+                "name       TEXT        NOT NULL," +
+                "date_added TIMESTAMP   DEFAULT CURRENT_TIMESTAMP" +
+                ");"
+
+        query += "CREATE TABLE transactions (" +
+                "ticket_nr      SERIAL    PRIMARY KEY," +
+                "user_id        SERIAL    REFERENCES users (id)," +
+                "stop_id        SERIAL    REFERENCES stops (id)," +
+                "date_added     TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                ");"
+
+        Sql.withInstance(dburl, dbuser, dbpassword, driver) {
+            sql -> sql.execute(query)
+        }
+    }
+}
+
+task populateTables (group: 'Database Setup', description: 'Populates the database with dummy data. Tables must exist first!') {
+    configurations { jdbc }
+    dependencies { jdbc 'org.postgresql:postgresql:42.2.0' }
+
+    doFirst {
+        /* Find the PSQL Driver */
+        def sqlClassLoader = Sql.classLoader
+        configurations.jdbc.each { sqlClassLoader.addURL it.toURI().toURL() }
+
+        println "Inserting dummy data into tables..."
+    }
+    doLast {
+        /* Stops dummy data */
+        def query = "INSERT INTO stops (name) VALUES" +
+                 "('Männiku'),('Kauge'),('Pihlaka'),('P.Kerese'),('Karusmarja'),('Värava');"
+
+        /* Users dummy data. PS personal codes are in invalid format */
+        query += "INSERT INTO users (name, personal_id, date_of_birth) VALUES" +
+                 "('Kalevipoeg', '52202220029', '2222-02-22')," +
+                 "('Kalevipoeg1', '52202220030', '2222-02-22')," +
+                 "('Kalevipoeg2', '52202220031', '2222-02-22')," +
+                 "('Kalevipoeg3', '52202220032', '2222-02-22')," +
+                 "('Kalevipoeg4', '52202220033', '2222-02-22')," +
+                 "('Kalevipoeg5', '52202220034', '2222-02-22')," +
+                 "('Kalevipoeg6', '52202220035', '2222-02-22')," +
+                 "('Kalevipoeg7', '52202220036', '2222-02-22')," +
+                 "('Kalevipoeg8', '52202220037', '2222-02-22')," +
+                 "('Kalevitepoeg', '52202220038', '2222-02-22');"
+
+
+        Sql.withInstance(dburl, dbuser, dbpassword, driver) {
+            sql -> sql.execute(query)
+        }
+    }
+}
+
+task clearTables(group: 'Database Setup', description: 'Truncates the tables') {
+    configurations { jdbc }
+    dependencies { jdbc 'org.postgresql:postgresql:42.2.0' }
+
+    doFirst {
+        /* Find the PSQL Driver */
+        def sqlClassLoader = Sql.classLoader
+        configurations.jdbc.each { sqlClassLoader.addURL it.toURI().toURL() }
+
+        println "Clearing tables..."
+    }
+    doLast {
+        def query = "TRUNCATE TABLE transactions CASCADE;" +
+                "TRUNCATE TABLE stops CASCADE;" +
+                "TRUNCATE TABLE users CASCADE;"
+
+        Sql.withInstance(dburl, dbuser, dbpassword, driver) {
+            sql -> sql.execute(query)
+        }
+    }
+}
+
+task dropTables(group: 'Database Setup', description: 'Drops the tables') {
+    configurations { jdbc }
+    dependencies { jdbc 'org.postgresql:postgresql:42.2.0' }
+
+    doFirst {
+        /* Find the PSQL Driver */
+        def sqlClassLoader = Sql.classLoader
+        configurations.jdbc.each { sqlClassLoader.addURL it.toURI().toURL() }
+
+        println "Dropping tables..."
+    }
+    doLast {
+        def query = "DROP TABLE transactions CASCADE;" +
+                "DROP TABLE stops CASCADE;" +
+                "DROP TABLE users CASCADE;";
+
+        Sql.withInstance(dburl, dbuser, dbpassword, driver) {
+            sql -> sql.execute(query)
+        }
+    }
+}
+
+task firstTimeSetup(group: 'Database Setup', description: 'Run this task if the database exists but is empty. Creates tables and adds dummy data.') {
+    dependsOn 'createTables'
+    dependsOn 'populateTables'
+    tasks.findByName('populateTables').mustRunAfter 'createTables'
+}
+
+task reset(group: 'Database Setup', description: 'Drops the tables and calls firstTimeSetup task') {
+    dependsOn 'dropTables'
+    dependsOn 'firstTimeSetup'
+    tasks.findByName('firstTimeSetup').mustRunAfter 'dropTables'
 }
