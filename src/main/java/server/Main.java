@@ -18,7 +18,7 @@ public class Main {
         get("/api/users",  (request, response) -> {
             /*
              *  Returns all users in a JSONArray format.
-             *    [ "#getId()": {
+             *    [ "$id": {
              *          "name":          "#getName()".
              *          "personal_id":   "#getPersonalId()",
              *          "date_of_birth": "#getDateOfBirth()",
@@ -57,7 +57,7 @@ public class Main {
         get("/api/stops",  (request, response) -> {
             /*
              *  Returns all stops in a JSONArray format.
-             *    [ "#getId()": {
+             *    [ "$id": {
              *          "name":          "$name".
              *          "date_added":    "$dateAdded"
              *          },
