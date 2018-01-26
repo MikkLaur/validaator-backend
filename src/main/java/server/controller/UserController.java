@@ -6,7 +6,7 @@ import server.model.User;
 import java.sql.Date;
 import java.util.List;
 
-public class UserController extends Controller{
+public class UserController implements Controller {
     public UserController() {
 
     }

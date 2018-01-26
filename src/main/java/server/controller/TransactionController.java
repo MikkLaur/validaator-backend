@@ -5,7 +5,7 @@ import server.model.UserTransactionHistory;
 
 import java.util.List;
 
-public class TransactionController extends Controller {
+public class TransactionController implements Controller {
     public TransactionController() {
 
     }

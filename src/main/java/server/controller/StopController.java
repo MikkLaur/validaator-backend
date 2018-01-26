@@ -5,7 +5,7 @@ import server.model.Stop;
 
 import java.util.List;
 
-public class StopController extends Controller {
+public class StopController implements Controller {
     public StopController() {
 
     }
