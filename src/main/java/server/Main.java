@@ -27,7 +27,7 @@ public class Main {
              *      ...
              *    ]
              */
-            return userController.getAllUsers();
+            return userController.getAllJSON();
         });
 
         post( "/api/users", "application/json", (request, response) -> {

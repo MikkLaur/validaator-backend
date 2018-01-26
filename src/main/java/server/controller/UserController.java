@@ -16,7 +16,7 @@ public class UserController implements Controller {
         return database.insertUser(name, personalID, dob);
     }
 
-    public String getAllUsers() {
+    public String getAllJSON() {
         JSONArray jsonArray = new JSONArray();
         List<User> users = database.selectAllUsers();
         for (User user : users) {
