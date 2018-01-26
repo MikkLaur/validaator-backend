@@ -165,3 +165,5 @@ task reset(group: 'Database Setup', description: 'Drops the tables and calls fir
     dependsOn 'firstTimeSetup'
     tasks.findByName('firstTimeSetup').mustRunAfter 'dropTables'
 }
+
+tasks.findByName('test').dependsOn('reset')
