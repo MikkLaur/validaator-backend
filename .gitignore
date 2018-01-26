@@ -212,5 +212,8 @@ project.lock.json
 # End of core ignore list, below put you custom 'per project' settings (patterns or path)
 #####
 
+# Gradle specific
+build/
 .gradle/
+# IDEA file
 *.iml
