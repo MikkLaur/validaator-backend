@@ -33,57 +33,12 @@ public final class DatabaseWrapper {
      /* PREDEFINED QUERIES */
     ////////////////////////
 
-    public List<UserTransactionHistory> selectUserTransactionHistory(long userId) {
-        List<UserTransactionHistory> transactions = new ArrayList<>();
-        try {
-            Connection conn = connect();
-            PreparedStatement pstmt = conn
-                    .prepareStatement
-                            ("SELECT transactions.ticket_nr, stops.name, transactions.date_added FROM transactions " +
-                             "INNER JOIN stops ON transactions.stop_id = stops.id " +
-                             "INNER JOIN users ON transactions.user_id = users.id " +
-                             "WHERE users.id = (?) " +
-                             "ORDER BY transactions.date_added DESC");
-            pstmt.setLong(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                transactions.add(new UserTransactionHistory(
-                        rs.getLong(1),
-                        rs.getString(2),
-                        rs.getDate(3)
-                ));
-            }
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return transactions;
-    }
+    /////
+    // SELECT ALL QUERIES
+    /////
 
-    // *** PS: storing every User in a List will incur scaling issues
-    public List<Stop> selectAllStops() {
-        List<Stop> stops = new ArrayList<>();
-        try {
-            Connection conn = connect();
-            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM stops;");
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                stops.add(new Stop(
-                        rs.getLong(1),
-                        rs.getString(2),
-                        rs.getDate(3)
-                ));
-            }
-            conn.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return stops;
-    }
-
-    // *** PS: storing every User in a List will incur scaling issues
     public List<User> selectAllUsers() {
+        // *** PS: storing every User in a List will incur scaling issues
         List<User> users = new ArrayList<>();
         try {
             Connection conn = connect();
@@ -104,6 +59,54 @@ public final class DatabaseWrapper {
             e.printStackTrace();
         }
         return users;
+    }
+
+    public List<Stop> selectAllStops() {
+        // *** PS: storing every User in a List will incur scaling issues
+        List<Stop> stops = new ArrayList<>();
+        try {
+            Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM stops;");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                stops.add(new Stop(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getDate(3)
+                ));
+            }
+            conn.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stops;
+    }
+
+    /////
+    // INSERT QUERIES
+    /////
+
+    public long insertUser(String name, String personalId, Date dob) {
+        long userId = -1;
+        try {
+            Connection conn = connect();
+            // Statement.RETURN_GENERATED_KEYS makes the newly created row accessible from pstmt.getGeneratedKeys()
+            PreparedStatement pstmt = conn.
+                    prepareStatement("INSERT INTO users (name, personal_id, date_of_birth) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, name);
+            pstmt.setString(2, personalId);
+            pstmt.setDate(3, dob);
+            pstmt.executeUpdate();
+
+            /* Get the user_id for return */
+            userId = getInsertId(pstmt.getGeneratedKeys());
+            conn.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userId;
     }
 
     public long insertStop(String stopName) {
@@ -147,26 +150,35 @@ public final class DatabaseWrapper {
         return ticketNr;
     }
 
-    public long insertUser(String name, String personalId, Date dob) {
-        long userId = -1;
+    /////
+    // SPECIFIC QUERIES
+    /////
+
+    public List<UserTransactionHistory> selectUserTransactionHistory(long userId) {
+        List<UserTransactionHistory> transactions = new ArrayList<>();
         try {
             Connection conn = connect();
-            // Statement.RETURN_GENERATED_KEYS makes the newly created row accessible from pstmt.getGeneratedKeys()
-            PreparedStatement pstmt = conn.
-                    prepareStatement("INSERT INTO users (name, personal_id, date_of_birth) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1, name);
-            pstmt.setString(2, personalId);
-            pstmt.setDate(3, dob);
-            pstmt.executeUpdate();
-
-            /* Get the user_id for return */
-            userId = getInsertId(pstmt.getGeneratedKeys());
+            PreparedStatement pstmt = conn
+                    .prepareStatement
+                            ("SELECT transactions.ticket_nr, stops.name, transactions.date_added FROM transactions " +
+                             "INNER JOIN stops ON transactions.stop_id = stops.id " +
+                             "INNER JOIN users ON transactions.user_id = users.id " +
+                             "WHERE users.id = (?) " +
+                             "ORDER BY transactions.date_added DESC");
+            pstmt.setLong(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                transactions.add(new UserTransactionHistory(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getDate(3)
+                ));
+            }
             conn.close();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return userId;
+        return transactions;
     }
 
     // On success:
