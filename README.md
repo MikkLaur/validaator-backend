@@ -19,7 +19,7 @@ Running these commands from Linux terminal creates a database and a user (requir
 $ sudo -u postgres psql -c "CREATE DATABASE validaatordb;"
 $ sudo -u postgres psql -c "CREATE USER testuser WITH PASSWORD 'test';GRANT ALL PRIVILEGES ON DATABASE validaatordb TO testuser;"
 ```
-Table creation is handled by a gradle task: ```$ gradle firstTimeSetup```. This task creates the tables and populates them with dummy data.
+Table creation is handled by a gradle task: ```$ ./gradlew firstTimeSetup```. This task creates the tables and populates them with dummy data.
 ###### Configuring database credentials
 If you wish to change the credentials used by the project, read the following.
 * Configuring from a config file has not been implemented and must be done manually
@@ -31,9 +31,9 @@ In the constructor of DatabaseWrapper class and in gradle.build.
 /gradle.build
 ```
 #### Running the project
-The project is using gradle to pull in third-party libraries. It is also using Gradle to set up the database with needed tables and populate it with dummy data.
-First the database tables must be created with ```$ gradle firstTimeSetup```.
-Then the project is ready to be executed with ```$ gradle run```.
+The project is using gradle to pull in third-party libraries. It is also using gradle to set up the database with needed tables and populate it with dummy data.
+First the database tables must be created with ```$ ./gradlew firstTimeSetup```.
+Then the project is ready to be executed with ```$ ./gradlew run```.
 Once the application is running, the RESTful routes are open for HTTP requests on ```localhost:5432/```.
 
 #### Routes
@@ -114,19 +114,19 @@ Once the application is running, the RESTful routes are open for HTTP requests o
         Fails when:
             - user with :id does not exist
 
-##### Database managment with gradle
-```$ gradle firstTimeSetup```
+##### Database management with gradle
+```$ ./gradlew firstTimeSetup```
 Creates the users, stops and transaction tables . Then inserts dummy data.
-```$ gradle reset```
+```$ ./gradlew reset```
 Drops all tables and runs firstTimeSetup
 
-```$ gradle createTables```
+```$ ./gradlew createTables```
 Creates the users, stops and transaction tables.
-```$ gradle populateTables```
+```$ ./gradlew populateTables```
 Inserts dummy data into users and stops tables.
-```$ gradle clearTables```
+```$ ./gradlew clearTables```
 Deletes all insertions from tables. Does not clear sequence tables.
-```$ gradle dropTables```
+```$ ./gradlew dropTables```
 Drops all tables and sequences in the database.
 
 
