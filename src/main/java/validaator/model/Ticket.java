@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-public class Transaction {
+public class Ticket {
 
     @ManyToOne
     private User user;
@@ -28,10 +28,10 @@ public class Transaction {
     @UpdateTimestamp
     private Date lastUpdatedOn;
 
-    public Transaction(User user) {
+    public Ticket(User user) {
 
     }
 
-    Transaction() { // Used by JPA
+    Ticket() { // Used by JPA
     }
 }

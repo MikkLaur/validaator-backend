@@ -2,6 +2,6 @@ package validaator.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TransactionRepository extends JpaRepository<Transaction, Long>{
+public interface TicketRepository extends JpaRepository<Ticket, Long>{
 
 }

@@ -14,7 +14,7 @@ public class Stop {
     private String name;
 
     @OneToMany
-    private Set<Transaction> transactions;
+    private Set<Ticket> tickets;
 
     /* Getter */
 
@@ -22,7 +22,7 @@ public class Stop {
 
     public String getName() { return name; }
 
-    public Set<Transaction> getTransactions() { return transactions; }
+    public Set<Ticket> getTickets() { return tickets; }
 
     /* Constructor */
 

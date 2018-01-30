@@ -14,7 +14,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import validaator.Application;
-import validaator.model.TransactionRepository;
+import validaator.model.TicketRepository;
 import validaator.model.User;
 import validaator.model.UserRepository;
 
@@ -54,7 +54,7 @@ public class UserRestControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    private TransactionRepository transactionRepository;
+    private TicketRepository ticketRepository;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -76,7 +76,7 @@ public class UserRestControllerTest {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
 
         this.userRepository.deleteAllInBatch();
-        this.transactionRepository.deleteAllInBatch();
+        this.ticketRepository.deleteAllInBatch();
 
 
         user = userRepository.save(new User("miggest", "password",
@@ -103,7 +103,11 @@ public class UserRestControllerTest {
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.id", is(user.getId().intValue())))
                 .andExpect(jsonPath("$.username", is(user.getUsername())))
-                .andExpect(jsonPath("$.personalCode", is(user.getPersonalCode())));
+                .andExpect(jsonPath("$.email", is(user.getEmail())))
+                .andExpect(jsonPath("$.personalCode", is(user.getPersonalCode())))
+                .andExpect(jsonPath("$.dateOfBirth", is(user.getDateOfBirth().toString())))
+                .andExpect(jsonPath("$.firstName", is(user.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(user.getLastName())));
     }
 
     @Test

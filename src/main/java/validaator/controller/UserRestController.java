@@ -1,9 +1,8 @@
 package validaator.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import validaator.model.TransactionRepository;
+import validaator.model.TicketRepository;
 import validaator.model.User;
 import validaator.model.UserRepository;
 
@@ -14,12 +13,12 @@ import java.util.Collection;
 public class UserRestController {
 
     private final UserRepository userRepository;
-    private final TransactionRepository transactionRepository;
+    private final TicketRepository ticketRepository;
 
     @Autowired
-    public UserRestController(UserRepository userRepository, TransactionRepository transactionRepository) {
+    public UserRestController(UserRepository userRepository, TicketRepository ticketRepository) {
         this.userRepository = userRepository;
-        this.transactionRepository = transactionRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET)

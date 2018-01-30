@@ -4,9 +4,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.RequestMapping;
-import validaator.model.StopRepository;
-import validaator.model.TransactionRepository;
 import validaator.model.User;
 import validaator.model.UserRepository;
 

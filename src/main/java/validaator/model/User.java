@@ -13,7 +13,7 @@ import java.util.Set;
 public class User {
 
     @OneToMany(mappedBy = "user")
-    private Set<Transaction> transactions = new HashSet<>();
+    private Set<Ticket> tickets = new HashSet<>();
 
     @Id
     @GeneratedValue
@@ -46,7 +46,7 @@ public class User {
 
     /* Getter */
 
-    public Set<Transaction> getTransactions() { return transactions; }
+    public Set<Ticket> getTickets() { return tickets; }
 
     public Long getId() { return id; }
 
