@@ -47,8 +47,7 @@ public class UserRestControllerTest {
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
     private User user;
-
-    private List<User> userList = new ArrayList<>();
+    private List<User> userList;
 
     @Autowired
     private UserRepository userRepository;
@@ -73,18 +72,18 @@ public class UserRestControllerTest {
 
     @Before
     public void setup() throws Exception {
-        this.mockMvc = webAppContextSetup(webApplicationContext).build();
+        this.mockMvc = webAppContextSetup(this.webApplicationContext).build();
 
         this.userRepository.deleteAllInBatch();
         this.ticketRepository.deleteAllInBatch();
 
 
-        user = userRepository.save(new User("miggest", "password",
-                "miggest@email.com", "39505312733",
-                Date.valueOf("1995-05-31"),"Mikk",
+        this.user = this.userRepository.save(new User("miggest", "password",
+                "miggest@email.com", "39505220000",
+                Date.valueOf("1995-05-22"),"Mikk",
                 "Laur"));
 
-        userList.add(user);
+        this.userList = Arrays.asList(user);
     }
 
     @Test

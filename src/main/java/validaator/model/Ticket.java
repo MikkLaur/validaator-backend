@@ -28,7 +28,7 @@ public class Ticket {
     @UpdateTimestamp
     private Date lastUpdatedOn;
 
-    public Ticket(User user) {
+    public Ticket(User user, Stop stop) {
 
     }
 
