@@ -23,14 +23,14 @@ public class User {
     private String password;
     private String username;
 
+    @Column(unique = true)
+    private String email;
+
     @Column(updatable = false, unique = true)
     private String personalCode;
 
     @Column(updatable = false)
     private Date dateOfBirth;
-
-    @Column(unique = true)
-    private String email;
 
     private String firstName;
     private String lastName;
@@ -54,9 +54,11 @@ public class User {
 
     public String getPassword() { return password; }
 
+    public String getEmail() { return email; }
+
     public String getPersonalCode() { return personalCode; }
 
-    public String getEmail() { return email; }
+    public Date getDateOfBirth() { return dateOfBirth; }
 
     public String getFirstName() { return firstName; }
 
@@ -68,14 +70,16 @@ public class User {
 
     /* Constructor */
 
-    public User(String username, String password, String personalCode, String firstName, String lastName) {
+    public User(String username, String password, String email, String personalCode, Date dateOfBirth, String firstName, String lastName) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.personalCode = personalCode;
+        this.dateOfBirth = dateOfBirth;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    User() { // Used by JPA
+    public User() { // Used by JPA
     }
 }
