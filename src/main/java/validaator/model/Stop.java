@@ -1,9 +1,6 @@
 package validaator.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -13,6 +10,7 @@ public class Stop {
     @GeneratedValue
     private long id;
 
+    @Column(unique = true)
     private String name;
 
     @OneToMany
