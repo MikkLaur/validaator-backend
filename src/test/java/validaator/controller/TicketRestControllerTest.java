@@ -74,18 +74,22 @@ public class TicketRestControllerTest {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
 
         this.userRepository.deleteAllInBatch();
+        this.stopRepository.deleteAllInBatch();
         this.ticketRepository.deleteAllInBatch();
 
 
-        userList = Arrays.asList(userRepository.save(
-                new User("miggest", "password",
-                "miggest@email.com", "39505220000",
-                Date.valueOf("1995-05-22"),"Mikk",
-                "Laur")),
-                new User("miggest2", "password",
+        userList = Arrays.asList(
+                userRepository.save(
+                        new User("miggest", "password",
+                                "miggest@email.com", "39505220000",
+                                Date.valueOf("1995-05-22"),"Mikk",
+                                "Laur")),
+                userRepository.save(
+                        new User("miggest2", "password",
                         "miggest2@email.com", "39505220001",
                         Date.valueOf("1995-05-22"),"Mikk",
-                        "Laur"));
+                        "Laur"))
+        );
 
         stopList = Arrays.asList(
                 stopRepository.save(new Stop("Vikerkaare")),

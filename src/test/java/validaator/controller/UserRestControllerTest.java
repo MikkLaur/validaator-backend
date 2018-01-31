@@ -96,17 +96,18 @@ public class UserRestControllerTest {
 
     @Test
     public void readUser() throws Exception {
-        User user = this.userList.get(0);
-        mockMvc.perform(get("/users/" + user.getId()))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$.id", is(user.getId().intValue())))
-                .andExpect(jsonPath("$.username", is(user.getUsername())))
-                .andExpect(jsonPath("$.email", is(user.getEmail())))
-                .andExpect(jsonPath("$.personalCode", is(user.getPersonalCode())))
-                .andExpect(jsonPath("$.dateOfBirth", is(user.getDateOfBirth().toString())))
-                .andExpect(jsonPath("$.firstName", is(user.getFirstName())))
-                .andExpect(jsonPath("$.lastName", is(user.getLastName())));
+        for (User user : userList) {
+            mockMvc.perform(get("/users/" + user.getId()))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(contentType))
+                    .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+                    .andExpect(jsonPath("$.username", is(user.getUsername())))
+                    .andExpect(jsonPath("$.email", is(user.getEmail())))
+                    .andExpect(jsonPath("$.personalCode", is(user.getPersonalCode())))
+                    .andExpect(jsonPath("$.dateOfBirth", is(user.getDateOfBirth().toString())))
+                    .andExpect(jsonPath("$.firstName", is(user.getFirstName())))
+                    .andExpect(jsonPath("$.lastName", is(user.getLastName())));
+        }
     }
 
     @Test
