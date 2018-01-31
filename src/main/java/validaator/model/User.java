@@ -40,7 +40,6 @@ public class User {
     @CreationTimestamp
     private Date createdOn;
 
-
     @UpdateTimestamp
     private Date lastUpdatedOn;
 

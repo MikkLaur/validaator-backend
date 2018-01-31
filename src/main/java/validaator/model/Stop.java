@@ -1,24 +1,37 @@
 package validaator.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.Set;
 
 @Entity
 public class Stop {
 
+    @JsonIgnore
+    @OneToMany
+    private Set<Ticket> tickets;
+
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     @Column(unique = true)
     private String name;
 
-    @OneToMany
-    private Set<Ticket> tickets;
+    @Column(updatable = false)
+    @CreationTimestamp
+    private Date createdOn;
+
+    @UpdateTimestamp
+    private Date lastUpdatedOn;
 
     /* Getter */
 
-    public long getId() { return id; }
+    public Long getId() { return id; }
 
     public String getName() { return name; }
 
@@ -28,5 +41,8 @@ public class Stop {
 
     public Stop(String name) {
         this.name = name;
+    }
+
+    public Stop() { // Used by JPA
     }
 }
