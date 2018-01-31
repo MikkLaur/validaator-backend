@@ -26,9 +26,10 @@ public class UserRestController {
         return userRepository.findAll();
     }
 
-
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    User readUser(@PathVariable Long id) {
+    User readOne(@PathVariable Long id) {
         return userRepository.findOne(id);
     }
+
+    //TODO: Create, Update, Delete
 }
