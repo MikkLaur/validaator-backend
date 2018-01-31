@@ -108,7 +108,7 @@ public class TicketRestControllerTest {
     @Test
     public void readTickets() throws Exception {
         User user = userList.get(0);
-        mockMvc.perform(get("/users/" + user.getId() + "/transactions"))
+        mockMvc.perform(get("/users/" + user.getId() + "/tickets"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$", hasSize(user.getTickets().size())));
@@ -117,10 +117,10 @@ public class TicketRestControllerTest {
     @Test
     public void readTicket() throws Exception {
         for (User user : userList) {
-            mockMvc.perform(get("/users/" + user.getId() + "/transactions/" + "/1"))
+            mockMvc.perform(get("/users/" + user.getId() + "/tickets/" + "/1"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(contentType));
-            mockMvc.perform(get("/users/" + user.getId() + "/transactions/" + "/2"))
+            mockMvc.perform(get("/users/" + user.getId() + "/tickets/" + "/2"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(contentType));
         }
@@ -133,7 +133,7 @@ public class TicketRestControllerTest {
                 user, stopList.get(0)
         ));
 
-        this.mockMvc.perform(post("/users/" + user.getId() + "/transactions")
+        this.mockMvc.perform(post("/users/" + user.getId() + "/tickets")
                 .contentType(contentType)
                 .content(ticketJson))
                 .andExpect(status().isCreated());
