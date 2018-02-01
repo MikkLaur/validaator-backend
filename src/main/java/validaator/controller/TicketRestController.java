@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users/{id}/tickets")
+@RequestMapping("/tickets")
 public class TicketRestController {
 
     private final UserRepository userRepository;
@@ -31,14 +31,9 @@ public class TicketRestController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{ticketId}")
-    Ticket readOne(@PathVariable Long userId, @PathVariable Long ticketId) {
+    Ticket readOne(@PathVariable Long ticketId) {
         //TODO Implement ReadOne
         return null;
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> create(@PathVariable Long userId, @RequestBody Ticket input) {
-        return ResponseEntity.noContent().build();
     }
 
     //TODO: Create, Update, Delete
