@@ -12,7 +12,8 @@ import java.util.Set;
 @Entity
 public class User {
 
-    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    @OneToMany
     private Set<Ticket> tickets = new HashSet<>();
 
     @Id

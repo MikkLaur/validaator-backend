@@ -6,6 +6,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,7 +14,7 @@ public class Stop {
 
     @JsonIgnore
     @OneToMany
-    private Set<Ticket> tickets;
+    private Set<Ticket> tickets = new HashSet<>();
 
     @Id
     @GeneratedValue
