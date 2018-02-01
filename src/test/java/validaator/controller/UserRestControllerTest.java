@@ -192,11 +192,31 @@ public class UserRestControllerTest {
         String ticketJson = json(new Ticket(
                 user, stopList.get(0)
         ));
-
+        int totalTickets = ticketRepository.findByUserId(user.getId()).size();
+        /* Post ticket */
         this.mockMvc.perform(post("/users/" + user.getId() + "/tickets")
                 .contentType(contentType)
                 .content(ticketJson))
                 .andExpect(status().isCreated());
+
+        /* Check whether the user has one more ticket now */
+        this.mockMvc.perform(get("/users/" + user.getId() + "/tickets"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", hasSize(totalTickets + 1)));
+    }
+
+    @Test
+    public void createTicketWrongUserIdInPathVariable() throws Exception {
+        User user = userList.get(0);
+        String ticketJson = json(new Ticket(
+                userList.get(1), stopList.get(0)
+        ));
+
+        this.mockMvc.perform(post("/users/" + user.getId() + "tickets")
+                .contentType(contentType)
+                .content(ticketJson))
+                .andExpect(status().is4xxClientError()); // Server responds 405. Should respond 403!
     }
 
     private String json(Object o) throws IOException {
