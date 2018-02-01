@@ -16,21 +16,4 @@ public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-
-
-    @Bean
-    CommandLineRunner init(UserRepository userRepository) {
-        return (args) ->
-                Arrays.asList("username1,username2".split(","))
-                        .forEach(a -> {
-                            User user = userRepository.save(new User(
-                                    a,
-                                    "password",
-                                    a.concat("@email.com"),
-                                    a.concat("39505310000"),
-                                    Date.valueOf("1995-05-31"),
-                                    "firstname",
-                                    "lastname"));
-                        });
-    }
 }
