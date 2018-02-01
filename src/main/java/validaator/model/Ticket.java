@@ -42,7 +42,8 @@ public class Ticket {
     /* Constructor */
 
     public Ticket(User user, Stop stop) {
-
+        this.user = user;
+        this.stop = stop;
     }
 
     Ticket() { // Used by JPA
