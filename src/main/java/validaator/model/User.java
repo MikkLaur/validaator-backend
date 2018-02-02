@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,19 +23,25 @@ public class User {
 
     @JsonIgnore
     private String password;
+    @NotNull
     @Column(unique = true)
     private String username;
 
     @Column(unique = true)
+    @NotNull
     private String email;
 
     @Column(updatable = false, unique = true)
+    @NotNull
     private String personalCode;
 
     @Column(updatable = false)
+    @NotNull
     private Date dateOfBirth;
 
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
 
     @Column(updatable = false)
