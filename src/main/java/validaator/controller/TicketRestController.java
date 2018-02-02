@@ -26,15 +26,12 @@ public class TicketRestController {
 
 
     @RequestMapping(method = RequestMethod.GET)
-    Collection<Ticket> readAll(@PathVariable Long userId) {
-        return this.ticketRepository.findByUserId(userId);
+    Collection<Ticket> readAll() {
+        return this.ticketRepository.findAll();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{ticketId}")
     Ticket readOne(@PathVariable Long ticketId) {
-        //TODO Implement ReadOne
-        return null;
+        return ticketRepository.findOne(ticketId);
     }
-
-    //TODO: Create, Update, Delete
 }

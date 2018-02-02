@@ -1,7 +1,7 @@
 package validaator.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import validaator.model.Stop;
 import validaator.model.StopRepository;
@@ -25,10 +25,9 @@ public class StopRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     Stop readOne(@PathVariable Long id) { return stopRepository.findOne(id); }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> create(@RequestBody Stop input) {
-        return ResponseEntity.noContent().build();
+    Stop create(@RequestBody Stop input) {
+        return stopRepository.save(input);
     }
-
-    // TODO: Create, Update, Delete routes
 }
