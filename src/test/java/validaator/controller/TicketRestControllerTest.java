@@ -74,9 +74,9 @@ public class TicketRestControllerTest {
     public void setup() throws Exception {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
 
+        this.ticketRepository.deleteAllInBatch();
         this.userRepository.deleteAllInBatch();
         this.stopRepository.deleteAllInBatch();
-        this.ticketRepository.deleteAllInBatch();
 
 
         userList = Arrays.asList(
@@ -106,38 +106,22 @@ public class TicketRestControllerTest {
         );
     }
 
-    @Test @Ignore
-    public void readTickets() throws Exception {
-        User user = userList.get(0);
-        mockMvc.perform(get("/users/" + user.getId() + "/tickets"))
+    @Test
+    public void readAll() throws Exception {
+        mockMvc.perform(get("/tickets"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$", hasSize(user.getTickets().size())));
+                .andExpect(jsonPath("$", hasSize(ticketList.size())));
     }
 
-    @Test @Ignore
-    public void readTicket() throws Exception {
-        for (User user : userList) {
-            mockMvc.perform(get("/users/" + user.getId() + "/tickets/" + "/1"))
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType(contentType));
-            mockMvc.perform(get("/users/" + user.getId() + "/tickets/" + "/2"))
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType(contentType));
+    @Test
+    public void readOne() throws Exception {
+            for(Ticket ticket : ticketRepository.findAll()) {
+                mockMvc.perform(get("/tickets/" + ticket.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.id", is(ticket.getId().intValue())));
         }
-    }
-
-    @Test @Ignore
-    public void createTicket() throws Exception {
-        User user = userList.get(0);
-        String ticketJson = json(new Ticket(
-                user, stopList.get(0)
-        ));
-
-        this.mockMvc.perform(post("/users/" + user.getId() + "/tickets")
-                .contentType(contentType)
-                .content(ticketJson))
-                .andExpect(status().isCreated());
     }
 
     private String json(Object o) throws IOException {

@@ -111,12 +111,12 @@ public class UserRestControllerTest {
         );
     }
 
-    @Test
+    @Test //TODO Not what is is supposed to be
     public void userNotFound() throws Exception {
         mockMvc.perform(post("/users/" + userList.size()+1)
-                .content(this.json(new User()))
+                .content(json(new User()))
                 .contentType(contentType))
-                .andExpect(status().isMethodNotAllowed());  // Error 405
+                .andExpect(status().isMethodNotAllowed());  // Throws error 405 at the moment
     }
 
     @Test
@@ -144,6 +144,58 @@ public class UserRestControllerTest {
                 .andExpect(jsonPath("$[0].id", is(this.userList.get(0).getId().intValue())));
     }
 
+    @Test
+    public void createUser() throws Exception {
+        String userJson = json(new User(
+                "addme!",
+                "password",
+                "addme@email.com",
+                "231591351",
+                Date.valueOf("1950-12-11"),
+                "ultimate",
+                "testerman"));
+        mockMvc.perform(post("/users")
+                .content(userJson)
+                .contentType(contentType))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void createUserDuplicate() throws Exception {
+        String userJson = json(new User(
+                "addme!",
+                "password",
+                "addme@email.com",
+                "231591351",
+                Date.valueOf("1950-12-11"),
+                "ultimate",
+                "testerman"));
+        mockMvc.perform(post("/users")
+                .content(userJson)
+                .contentType(contentType))
+                .andExpect(status().isCreated());
+        mockMvc.perform(post("/users")
+                .content(userJson)
+                .contentType(contentType))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test @Ignore
+    public void createUserInvalid() throws Exception {
+
+    }
+
+    @Test @Ignore
+    public void updateUser() throws Exception {
+
+    }
+
+    @Test @Ignore
+    public void deleteUser() throws Exception {
+
+    }
+
+    /* TICKETS */
 
     @Test
     public void readTicket() throws Exception {
@@ -216,7 +268,7 @@ public class UserRestControllerTest {
         this.mockMvc.perform(post("/users/" + user.getId() + "tickets")
                 .contentType(contentType)
                 .content(ticketJson))
-                .andExpect(status().is4xxClientError()); // Server responds 405. Should respond 403!
+                .andExpect(status().is4xxClientError()); // Server responds 405. Should respond 403/401.
     }
 
     private String json(Object o) throws IOException {

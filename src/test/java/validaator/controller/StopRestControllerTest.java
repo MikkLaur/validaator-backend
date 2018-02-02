@@ -109,6 +109,19 @@ public class StopRestControllerTest {
                 .andExpect(status().isCreated());
     }
 
+    @Test
+    public void createStopDuplicate() throws Exception {
+        String stopJson = json(new Stop("Bussipeatus"));
+        mockMvc.perform(post("/stops")
+                .contentType(contentType)
+                .content(stopJson))
+                .andExpect(status().isCreated());
+        mockMvc.perform(post("/stops")
+                .contentType(contentType)
+                .content(stopJson))
+                .andExpect(status().is4xxClientError());
+    }
+
     @Test @Ignore
     public void updateStop() throws Exception {
 
