@@ -1,6 +1,7 @@
 package validaator.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,6 +11,8 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+
+@Data
 @Entity
 public class User {
 
@@ -24,7 +27,7 @@ public class User {
     @JsonIgnore
     private String password;
     @NotNull
-    @Column(unique = true)
+    @Column(updatable = false, unique = true)
     private String username;
 
     @Column(unique = true)
@@ -50,31 +53,6 @@ public class User {
 
     @UpdateTimestamp
     private Date lastUpdatedOn;
-
-
-    /* Getter */
-
-    public Set<Ticket> getTickets() { return tickets; }
-
-    public Long getId() { return id; }
-
-    public String getUsername() { return username; }
-
-    public String getPassword() { return password; }
-
-    public String getEmail() { return email; }
-
-    public String getPersonalCode() { return personalCode; }
-
-    public Date getDateOfBirth() { return dateOfBirth; }
-
-    public String getFirstName() { return firstName; }
-
-    public String getLastName() { return lastName; }
-
-    public Date getCreatedOn() { return createdOn; }
-
-    public Date getLastUpdatedOn() { return lastUpdatedOn; }
 
     /* Constructor */
 

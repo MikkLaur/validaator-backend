@@ -1,6 +1,7 @@
 package validaator.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,6 +11,8 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+
+@Data
 @Entity
 public class Stop {
 
@@ -31,14 +34,6 @@ public class Stop {
 
     @UpdateTimestamp
     private Date lastUpdatedOn;
-
-    /* Getter */
-
-    public Long getId() { return id; }
-
-    public String getName() { return name; }
-
-    public Set<Ticket> getTickets() { return tickets; }
 
     /* Constructor */
 

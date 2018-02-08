@@ -1,12 +1,15 @@
 package validaator.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Date;
 
+
+@Data
 @Entity
 public class Ticket {
 
@@ -26,18 +29,6 @@ public class Ticket {
 
     @UpdateTimestamp
     private Date lastUpdatedOn;
-
-    /* Getter */
-
-    public User getUser() { return user; }
-
-    public Stop getStop() { return stop; }
-
-    public Long getId() { return id; }
-
-    public Date getCreatedOn() { return createdOn; }
-
-    public Date getLastUpdatedOn() { return lastUpdatedOn; }
 
     /* Constructor */
 
