@@ -25,10 +25,13 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -100,6 +103,11 @@ public class StopRestControllerTest {
         }
     }
 
+    @Test @Ignore
+    public void readStopNull() throws Exception {
+
+    }
+
     @Test
     public void createStop() throws Exception {
         String stopJson = json(new Stop("Bussipeatus"));
@@ -122,15 +130,48 @@ public class StopRestControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    @Test @Ignore
+    @Test
     public void updateStop() throws Exception {
+        for (Stop stop : stopRepository.findAll()) {
+            stop.setName("New " + stop.getName());
+            String stopJson = json(stop);
 
+            mockMvc.perform(put("/stops/" + stop.getId() + "/edit")
+                    .contentType(contentType)
+                    .content(stopJson))
+                    .andExpect(status().isOk());
+
+            assertEquals(stop.getName(), stopRepository.findOne(stop.getId()).getName());
+        }
+    }
+
+    @Test
+    public void updateStopPathIdNotEqualToJSONs() throws Exception {
+        int falseStopId = stopRepository.findAll().size() + 1;
+
+        for (Stop stop : stopRepository.findAll()) {
+            stop.setName("New " + stop.getName());
+            String stopJson = json(stop);
+
+            mockMvc.perform(put("/stops/" + falseStopId + "/edit")
+                    .contentType(contentType)
+                    .content(stopJson))
+                    .andExpect(status().isOk());
+
+            assertNotEquals(stop.getName(), stopRepository.findOne(stop.getId()).getName());
+        }
     }
 
 
-    @Test @Ignore
+    @Test
     public void deleteStop() throws Exception {
+        Stop stop = stopRepository.findAll().iterator().next();
 
+        mockMvc.perform(delete("/stops/" + stop.getId() + "/delete"))
+                .andExpect(status().is2xxSuccessful());
+
+        mockMvc.perform(get("/stops/" + stop.getId()))
+                .andExpect(status().is4xxClientError());
     }
 
 
