@@ -103,9 +103,11 @@ public class StopRestControllerTest {
         }
     }
 
-    @Test @Ignore
-    public void readStopNull() throws Exception {
-
+    @Test
+    public void readStopNotFound() throws Exception {
+        int notFoundId = stopRepository.findAll().size() + 99;
+        mockMvc.perform(get("/stops/" + notFoundId ))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -127,7 +129,7 @@ public class StopRestControllerTest {
         mockMvc.perform(post("/stops")
                 .contentType(contentType)
                 .content(stopJson))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -168,10 +170,10 @@ public class StopRestControllerTest {
         Stop stop = stopRepository.findAll().iterator().next();
 
         mockMvc.perform(delete("/stops/" + stop.getId() + "/delete"))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/stops/" + stop.getId()))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
     }
 
 

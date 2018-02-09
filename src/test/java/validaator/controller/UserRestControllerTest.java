@@ -174,7 +174,7 @@ public class UserRestControllerTest {
         mockMvc.perform(post("/users")
                 .content(userJson)
                 .contentType(contentType))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isConflict());
     }
 
     @Test @Ignore
@@ -187,7 +187,7 @@ public class UserRestControllerTest {
             user.setEmail("new" + user.getEmail());
             String userJson = json(user);
 
-            mockMvc.perform(put("/users/" + user.getId())
+            mockMvc.perform(put("/users/" + user.getId() + "/edit")
                     .contentType(contentType)
                     .content(userJson))
                     .andExpect(status().isOk());
@@ -201,7 +201,7 @@ public class UserRestControllerTest {
         User user = userRepository.findAll().iterator().next();
 
         mockMvc.perform(delete("/users/" + user.getId() + "/delete"))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/users/" + user.getId()))
                 .andExpect(status().isNotFound());
@@ -236,9 +236,9 @@ public class UserRestControllerTest {
         Ticket ticket2 = ticketRepository.findByUserId(user2.getId()).iterator().next();
 
         mockMvc.perform(get("/users/" + user1.getId() + "/tickets/" + ticket2.getId() ))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
         mockMvc.perform(get("/users/" + user2.getId() + "/tickets/" + ticket1.getId() ))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -277,10 +277,10 @@ public class UserRestControllerTest {
                 userList.get(1), stopList.get(0)
         ));
 
-        this.mockMvc.perform(post("/users/" + user.getId() + "tickets")
+        this.mockMvc.perform(post("/users/" + user.getId() + "/tickets")
                 .contentType(contentType)
                 .content(ticketJson))
-                .andExpect(status().is4xxClientError()); // Server responds 405. Should respond 403/401.
+                .andExpect(status().isMethodNotAllowed());
     }
 
     private String json(Object o) throws IOException {
