@@ -24,11 +24,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -182,17 +179,32 @@ public class UserRestControllerTest {
 
     @Test @Ignore
     public void createUserInvalid() throws Exception {
-
     }
 
-    @Test @Ignore
+    @Test
     public void updateUser() throws Exception {
+        for(User user : userRepository.findAll()) {
+            user.setEmail("new" + user.getEmail());
+            String userJson = json(user);
 
+            mockMvc.perform(put("/users/" + user.getId())
+                    .contentType(contentType)
+                    .content(userJson))
+                    .andExpect(status().isOk());
+
+            assertEquals(user.getEmail(), userRepository.findOne(user.getId()).getEmail());
+        }
     }
 
-    @Test @Ignore
+    @Test
     public void deleteUser() throws Exception {
+        User user = userRepository.findAll().iterator().next();
 
+        mockMvc.perform(delete("/users/" + user.getId() + "/delete"))
+                .andExpect(status().is2xxSuccessful());
+
+        mockMvc.perform(get("/users/" + user.getId()))
+                .andExpect(status().isNotFound());
     }
 
     /* TICKETS */
