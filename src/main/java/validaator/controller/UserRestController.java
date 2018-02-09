@@ -72,6 +72,10 @@ public class UserRestController {
             return new ResponseEntity<>("Unable to delete. User with id: " + id + " not found.",
                     HttpStatus.NOT_FOUND);
         }
+        // Keep the tickets on the database
+        for(Ticket ticket : ticketRepository.findByUserId(id)) {
+            ticket.setUser(null);
+        }
         userRepository.delete(id);
         return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
     }

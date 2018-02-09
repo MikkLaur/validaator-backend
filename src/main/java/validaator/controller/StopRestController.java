@@ -68,6 +68,6 @@ public class StopRestController {
                     HttpStatus.NOT_FOUND);
         }
         stopRepository.delete(id);
-        return new ResponseEntity<Stop>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
