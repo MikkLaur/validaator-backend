@@ -1,6 +1,7 @@
 package validaator.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import validaator.model.Stop;
@@ -15,23 +16,30 @@ import java.util.List;
 @RequestMapping("/tickets")
 public class TicketRestController {
 
-    private final UserRepository userRepository;
     private final TicketRepository ticketRepository;
 
     @Autowired
-    public TicketRestController(UserRepository userRepository, TicketRepository ticketRepository) {
-        this.userRepository = userRepository;
+    public TicketRestController(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
 
 
     @RequestMapping(method = RequestMethod.GET)
-    Collection<Ticket> readAll() {
-        return this.ticketRepository.findAll();
+    ResponseEntity<?> readAll() {
+        List<Ticket> tickets = ticketRepository.findAll();
+        if(tickets.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{ticketId}")
-    Ticket readOne(@PathVariable Long ticketId) {
-        return ticketRepository.findOne(ticketId);
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    ResponseEntity<?> readOne(@PathVariable Long id) {
+        Ticket ticket = ticketRepository.findOne(id);
+        if(ticket == null) {
+            return new ResponseEntity<>("Ticket with id " + id + " not found",
+                    HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(ticket, HttpStatus.OK);
     }
 }
