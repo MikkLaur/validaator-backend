@@ -42,8 +42,10 @@ public class User {
     @NotNull
     private Date dateOfBirth;
 
+    @Column(updatable = false)
     @NotNull
     private String firstName;
+    @Column(updatable = false)
     @NotNull
     private String lastName;
 
