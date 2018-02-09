@@ -50,6 +50,32 @@ public class UserRestController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}/edit")
+    ResponseEntity<?> put(@PathVariable Long id, @RequestBody User input) {
+        User updatedUser = userRepository.findOne(id);
+
+        if(updatedUser == null) {
+            return new ResponseEntity<>("Unable to update. User with id: " + id + " not found.",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        updatedUser.setEmail(input.getEmail());
+        return new ResponseEntity<>(userRepository.save(updatedUser),
+                HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "{id}/delete")
+    ResponseEntity<?> delete(@PathVariable Long id) {
+        User user = userRepository.findOne(id);
+
+        if(user == null) {
+            return new ResponseEntity<>("Unable to delete. User with id: " + id + " not found.",
+                    HttpStatus.NOT_FOUND);
+        }
+        userRepository.delete(id);
+        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+    }
+
     /* -- Ticketing -----------------------------------------------*/
 
     @RequestMapping(method = RequestMethod.GET, value = "/{userId}/tickets")
