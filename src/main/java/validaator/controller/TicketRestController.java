@@ -37,7 +37,7 @@ public class TicketRestController {
     ResponseEntity<?> readOne(@PathVariable Long id) {
         Ticket ticket = ticketRepository.findOne(id);
         if(ticket == null) {
-            return new ResponseEntity<>("Ticket with id " + id + " not found",
+            return new ResponseEntity<>("Ticket with id: " + id + " not found",
                     HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(ticket, HttpStatus.OK);

@@ -34,7 +34,7 @@ public class StopRestController {
     ResponseEntity<?> readOne(@PathVariable Long id) {
         Stop stop = stopRepository.findOne(id);
         if(stop == null) {
-            return new ResponseEntity<>("User with id " + id + " not found",
+            return new ResponseEntity<>("Stop with id: " + id + " not found",
                     HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(stop, HttpStatus.OK);
@@ -42,7 +42,7 @@ public class StopRestController {
 
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> create(@RequestBody Stop input) {
-        Stop stop = stopRepository.save(input); // Throws ConstraintViolationException
+        Stop stop = stopRepository.save(input); // Throws ConstraintViolationException, caught by RestResponseEntityExceptionHandler
         return new ResponseEntity<>(stop, HttpStatus.CREATED);
     }
 
@@ -51,7 +51,7 @@ public class StopRestController {
         Stop updatedStop = stopRepository.findOne(id);
 
         if(updatedStop == null) {
-            return new ResponseEntity<>("Unable to update. Stop with id " + id + " not found.",
+            return new ResponseEntity<>("Unable to update. Stop with id: " + id + " not found.",
                     HttpStatus.NOT_FOUND);
         }
         updatedStop.setName(input.getName());
@@ -64,7 +64,7 @@ public class StopRestController {
         Stop stop = stopRepository.findOne(id);
 
         if(stop == null) {
-            return new ResponseEntity<>("Unable to delete. Stop with id " + id + " not found.",
+            return new ResponseEntity<>("Unable to delete. Stop with id: " + id + " not found.",
                     HttpStatus.NOT_FOUND);
         }
         stopRepository.delete(id);

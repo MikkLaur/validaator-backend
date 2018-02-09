@@ -2,14 +2,15 @@ package validaator.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import validaator.model.Ticket;
 import validaator.model.TicketRepository;
 import validaator.model.User;
 import validaator.model.UserRepository;
 
-import java.net.URI;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -25,56 +26,58 @@ public class UserRestController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    Collection<User> readAll() {
-        return userRepository.findAll();
+    ResponseEntity<?> readAll() {
+        List<User> users = userRepository.findAll();
+        if(users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    User readOne(@PathVariable Long id) {
-        return userRepository.findOne(id);
+    ResponseEntity<?> readOne(@PathVariable Long id) {
+        User user = userRepository.findOne(id);
+        if(user == null) {
+            return new ResponseEntity<>("User with id " + id + " not found.",
+                    HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
-    User create(@RequestBody User input) {
-        return userRepository.save(input);
+    ResponseEntity<?> create(@RequestBody User input) {
+        User user = userRepository.save(input); // Throws ConstraintViolationException, caught by RestResponseEntityExceptionHandler
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    /* Ticketing */
+    /* -- Ticketing -----------------------------------------------*/
 
     @RequestMapping(method = RequestMethod.GET, value = "/{userId}/tickets")
-    Collection<Ticket> readAllTickets(@PathVariable Long userId) {
-        return this.ticketRepository.findByUserId(userId);
+    ResponseEntity<?> readAllTickets(@PathVariable Long userId) {
+        Collection<Ticket> tickets = ticketRepository.findByUserId(userId);
+
+        if(tickets.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{userId}/tickets/{ticketId}")
-    Ticket readOneTicket(@PathVariable Long userId, @PathVariable Long ticketId) {
-        return ticketRepository.findByUserId(userId).stream()
-                .filter(ticket -> ticket.getId().longValue() == ticketId)
+    ResponseEntity<?> readOneTicket(@PathVariable Long userId, @PathVariable Long ticketId) {
+        Ticket ticket = ticketRepository.findByUserId(userId).stream()
+                .filter(t -> t.getId().longValue() == ticketId)
                 .findFirst()
-                .orElseThrow(
-                        () -> new UserNotFoundException(userId)
-                );
+                .orElse(null);
+        if(ticket == null) {
+            return new ResponseEntity<>("Ticket not found", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(ticket, HttpStatus.OK);
     }
 
-/*  TODO: Clean this up. Decide which creation style to use.
     @RequestMapping(method = RequestMethod.POST, value="/{userId}/tickets")
     ResponseEntity<?> createTicket(@PathVariable Long userId, @RequestBody Ticket input) {
-        //Ticket result = ticketRepository.save(new Ticket(userRepository.findOne(userId), input.getStop()));
-        Ticket result = ticketRepository.save(new Ticket(input.getUser(), input.getStop()));
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{userId}/tickets/{ticketId}")
-                .buildAndExpand(result.getUser().getId(), result.getId()).toUri();
-        return ResponseEntity.created(location).build();
-    }
-*/
-
-    // This works too, but using ResponseStatus is less flexible (but how, mr. stackoverflow?) But compared to currently used, it is less verbose.
-    // And Exceptions are caught by a handler
-    @ResponseStatus(value = HttpStatus.CREATED)
-    @RequestMapping(method = RequestMethod.POST, value="/{userId}/tickets")
-    Ticket createTicket(@PathVariable Long userId, @RequestBody Ticket input) {
-        return ticketRepository.save(new Ticket(input.getUser(), input.getStop()));
+        Ticket ticket = ticketRepository.save(new Ticket(input.getUser(), input.getStop()));
+        return new ResponseEntity<>(ticket, HttpStatus.CREATED);
     }
 }
 
